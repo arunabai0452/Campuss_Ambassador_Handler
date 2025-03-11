@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hide Swiper's default navigation buttons */
+.swiper-button-next,
+.swiper-button-prev {
+    display: none !important;
+}
