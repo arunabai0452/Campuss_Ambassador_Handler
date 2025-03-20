@@ -1,3 +1,4 @@
+"use client"
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -11,6 +12,7 @@ import { Button } from "@heroui/button";
 import { Kbd } from "@heroui/kbd";
 import { Link } from "@heroui/link";
 import { Input } from "@heroui/input";
+import { usePathname } from "next/navigation"
 import { link as linkStyles } from "@heroui/theme";
 import NextLink from "next/link";
 import clsx from "clsx";
@@ -20,6 +22,7 @@ import { DropDownComponent } from "./dropdown";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
+
 import {
   GithubIcon,
   NotificationIcon,
@@ -27,7 +30,10 @@ import {
   Logo,
 } from "@/components/icons";
 
-export const Navbar = () => {
+export const Navbar = (props: { firstName: string, lastName: string, profileImageURL: string}) => {
+  const { firstName, lastName, profileImageURL } = props;
+  const pathName = usePathname() || "";
+  const isLogin = pathName.includes("login");
   const searchInput = (
     <Input
       aria-label="Search"
@@ -61,13 +67,17 @@ export const Navbar = () => {
             <p className="font-bold text-3xl text-inherit">Coltie</p>
           </NextLink>
         </NavbarBrand>
+        { !isLogin && (
         <NavbarItem className="hidden sm:flex flex-col justify-center items-start gap-3">
-          <p className="font-bold text-xl text-inherit">Hi, Robbyn</p>
+          <p className="font-bold text-xl text-inherit">{`Hi ${firstName} ${lastName}`}</p>
           <p className="font-bold text-xs text-custom-gray">
             Let&apos;s View Your Contributions
           </p>
         </NavbarItem>
+        )}
       </NavbarContent>
+      { !isLogin && (
+      <>
       <NavbarContent className="hidden sm:flex basis-1/5 sm:basis-full gap-5" justify="end">
         <Button
           isIconOnly
@@ -80,7 +90,7 @@ export const Navbar = () => {
           alt="Profile"
           className="rounded-full"
           height={40}
-          src="/assets/profile.png"
+          src={profileImageURL}
           width={40}
         />
         <DropDownComponent
@@ -129,6 +139,8 @@ export const Navbar = () => {
           ))}
         </div>
       </NavbarMenu>
+      </>
+      )}
     </HeroUINavbar>
   );
 };

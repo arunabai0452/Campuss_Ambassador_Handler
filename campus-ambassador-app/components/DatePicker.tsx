@@ -6,8 +6,8 @@ import { Card, CardBody, CardHeader } from "@heroui/card";
 import { Button } from "@heroui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const WeekDatePicker = () => {
-    const [selectedDate, setSelectedDate] = useState(new Date());
+const WeekDatePicker = ({ selectedDate, setSelectedDate } : {selectedDate: Date, setSelectedDate: (date: Date) => void}) => {
+
     const [currentWeek, setCurrentWeek] = useState(startOfWeek(new Date(), { weekStartsOn: 0 })); // Sunday as start
 
     const generateWeekDays = () => {

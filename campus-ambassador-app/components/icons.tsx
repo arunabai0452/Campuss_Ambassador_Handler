@@ -145,6 +145,40 @@ export const StarIcon: React.FC<IconSvgProps> = ({
   );
 };
 
+export const GoogleIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <Image
+      alt="Notification"
+      height={size}
+      src="/assets/Google_Logo.svg"  // Path to your SVG file
+      width={size}
+      {...props}
+    />
+  );
+};
+
+export const AppleIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <Image
+      alt="Notification"
+      height={size}
+      src="/assets/Apple_Logo.svg"  // Path to your SVG file
+      width={size}
+      {...props}
+    />
+  );
+};
+
 export const TwitterIcon: React.FC<IconSvgProps> = ({
   size = 24,
   width,

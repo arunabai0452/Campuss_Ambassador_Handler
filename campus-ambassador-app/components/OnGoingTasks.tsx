@@ -7,31 +7,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import { Button } from "@heroui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { TaskInfo } from "@/types/taskInfoTypes";
+import TimeDifference from "./TimeDifference";
 import { TimerIcon } from "./icons";
 import "swiper/css";
 import "swiper/css/navigation";
 
-export default function OnGoingTasks() {
+export default function OnGoingTasks({onGoingTasks}:{ onGoingTasks: TaskInfo[]}) {
     const swiperRef = useRef<any>(null);
-
-    const taskInfo = [{
-        "name": "Refer Three Friends",
-        "imageURL": "https://www.engineering.iastate.edu/people/files/2024/11/Anuj_photo_square_1.jpg",
-        "Deadline": 3,
-    }, {
-        "name": "Post a video about any topic",
-        "imageURL": "https://www.engineering.iastate.edu/people/files/2024/11/Anuj_photo_square_1.jpg",
-        "Deadline": 2,
-    }, {
-        "name": "Conduct survive about Coltie app",
-        "imageURL": "https://www.engineering.iastate.edu/people/files/2024/11/Anuj_photo_square_1.jpg",
-        "Deadline": 1,
-    }, {
-        "name": "One Medium Post",
-        "imageURL": "https://www.engineering.iastate.edu/people/files/2024/11/Anuj_photo_square_1.jpg",
-        "Deadline": 2,
-    }];
-
     return (
         <div>
             <div className="flex justify-between items-center">
@@ -74,24 +57,24 @@ export default function OnGoingTasks() {
                 slidesPerView={3}
                 navigation
             >
-                {taskInfo.map((task, index) => (
+                {onGoingTasks.map((task, index) => (
                     <SwiperSlide key={index} className="bg-white mt-2 mb-2 shadow-none">
                         <Card key={index} className="max-w-[600px] px-4 py-4 pr-20 shadow-sm border">
                             <CardHeader className="flex flex-col gap-2 items-start w-[280px]">
                                 <Image
                                     alt="Card background"
                                     className="object-cover rounded-xl"
-                                    src="https://static.wixstatic.com/media/6196da_de1d2447e2c94d8fba9c6944ef5726c4~mv2.jpg/v1/fill/w_420,h_194,fp_0.48_0.30,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/Faculty2.jpg"
+                                    src={task.image}
                                     width={500}
                                     isZoomed
                                     height={150}
                                 />
-                                <p className="text-sm">{task.name}</p>
+                                <p className="text-sm">{task.taskName}</p>
                             </CardHeader>
                             <CardBody className="px-3 py-0 text-small text-default-400 flex-row gap-6 py-4">
                                 <div className="flex items-center gap-1">
                                     <TimerIcon size={14} />
-                                    <p className="text-sm py-8">1 Hour</p>
+                                    <TimeDifference addedTime={task.addedDate} expiryTime={task.taskExpiry}/>
                                 </div>
                             </CardBody>
                         </Card>
