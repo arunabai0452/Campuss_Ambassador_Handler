@@ -9,7 +9,7 @@ interface CompletedTaskInfo {
     completionTime: string | null;
 }
 
-const groupTasksByWeek = (tasks: CompletedTaskInfo[]) => {
+const groupTasksByWeek = (tasks?: CompletedTaskInfo[]) => {
     const weeklyData = { S: 0, M: 0, T: 0, W: 0, T2: 0, F: 0, S2: 0 };
 
     tasks?.forEach(task => {

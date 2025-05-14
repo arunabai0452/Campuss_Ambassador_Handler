@@ -2,14 +2,14 @@
 import React, { useRef } from "react";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Image } from "@heroui/image";
-import { StarIcon, TaskIcon } from "./icons";
+import { StarIcon, TaskIcon } from "../icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import { Button } from "@heroui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TaskInfo } from "@/types/taskInfoTypes";
-import TimeDifference from "./TimeDifference";
-import { TimerIcon } from "./icons";
+import TimeDifference from "../TimeDifference";
+import { TimerIcon } from "../icons";
 import "swiper/css";
 import "swiper/css/navigation";
 
@@ -59,8 +59,8 @@ export default function OnGoingTasks({onGoingTasks}:{ onGoingTasks: TaskInfo[]})
             >
                 {onGoingTasks.map((task, index) => (
                     <SwiperSlide key={index} className="bg-white mt-2 mb-2 shadow-none">
-                        <Card key={index} className="max-w-[600px] px-4 py-4 pr-20 shadow-sm border">
-                            <CardHeader className="flex flex-col gap-2 items-start w-[280px]">
+                        <Card key={index} className="max-w-[350px] px-4 py-4 pr-20 shadow-sm border">
+                            <CardHeader className="flex flex-col gap-2 items-start w-[250px]">
                                 <Image
                                     alt="Card background"
                                     className="object-cover rounded-xl"

@@ -1,4 +1,5 @@
 "use client"
+import React,{useState} from "react";
 import {
   Navbar as HeroUINavbar,
   NavbarContent,
@@ -12,13 +13,12 @@ import { Button } from "@heroui/button";
 import { Kbd } from "@heroui/kbd";
 import { Link } from "@heroui/link";
 import { Input } from "@heroui/input";
-import { usePathname } from "next/navigation"
-import { link as linkStyles } from "@heroui/theme";
+import { usePathname, useSearchParams, useRouter } from "next/navigation"
 import NextLink from "next/link";
-import clsx from "clsx";
+import { DropDownIcon } from "./icons";
 import { Image } from "@heroui/image";
 
-import { DropDownComponent } from "./dropdown";
+import {Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -32,7 +32,10 @@ import {
 
 export const Navbar = (props: { firstName: string, lastName: string, profileImageURL: string}) => {
   const { firstName, lastName, profileImageURL } = props;
+  const [selectedPage, setSelectedPage] = useState("Dashboard");
   const pathName = usePathname() || "";
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const isLogin = pathName.includes("login");
   const searchInput = (
     <Input
@@ -54,7 +57,12 @@ export const Navbar = (props: { firstName: string, lastName: string, profileImag
       type="search"
     />
   );
-
+ const handleNav=(key: string) => {
+   setSelectedPage(key);
+   const userId = searchParams?.get("userId");
+   const role = searchParams?.get("role");
+   router.push(`/${key}?userId=${userId}&role=${role}`)
+ }
   return (
     <HeroUINavbar isBordered height={"6rem"} maxWidth="xl" position="sticky">
       <NavbarContent className="basis-1/5 sm:basis-full gap-16" justify="start">
@@ -93,10 +101,22 @@ export const Navbar = (props: { firstName: string, lastName: string, profileImag
           src={profileImageURL}
           width={40}
         />
-        <DropDownComponent
-          buttonLabel="Dashboard"
-          items={[{ label: "Dashboard", key: "Dashboard" }]}
-        />
+        <div>
+        <Dropdown>
+          <DropdownTrigger>
+              <Button
+                startContent={<DropDownIcon className="rounded-none" />}
+                variant="bordered"
+              >
+                  {selectedPage}
+              </Button>
+          </DropdownTrigger>
+          <DropdownMenu aria-label="Select Role" onAction={handleNav} align="end">
+            <DropdownItem key="dashboard">Dashboard</DropdownItem>
+            <DropdownItem key="userdetails">User Details</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+        </div>
       </NavbarContent>
       <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
         <Button

@@ -6,7 +6,7 @@ interface CompletedTaskInfo {
 }
 
 
-export interface AmbassadorInfo {
+export interface PersonInfo {
   firstName?: string;
   lastName?: string;
   email?: string;

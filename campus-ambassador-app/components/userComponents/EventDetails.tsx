@@ -4,7 +4,7 @@ import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Image } from "@heroui/image";
 import { TimerIcon } from "@/components/icons";
 import { TaskInfo } from "@/types/taskInfoTypes";
-import TimeDifference from "./TimeDifference";
+import TimeDifference from "../TimeDifference";
 
 export default function EventDetails({ taskState }: { taskState: TaskInfo[]}) {
     const [taskInDate, setTaskInDate] = useState<TaskInfo[]>();

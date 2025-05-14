@@ -5,12 +5,23 @@ import { PerfomerData } from "@/types/userInfoTypes";
 
 const API_URL = env.NEXT_PUBLIC_API_URL || "";
 
-export async function getUserInfo(email: string) {
+export async function getUserInfo(id: string, role: string) {
   try {
-    const response = await axios.get(API_URL + "users/by-email", {
-      params: { email },
+    const response = await axios.get(API_URL + "users/by-id", {
+      params: { id, role },
     });
-    console.log(response.data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching user by email:", error);
+    throw error;
+  }
+}
+
+export async function validateUserInfo(id?: string, role?: string) {
+  try {
+    const response = await axios.get(API_URL + "validate/userby-id", {
+      params: { id, role },
+    });
     return response.data;
   } catch (error: any) {
     console.error("Error fetching user by email:", error);
@@ -21,6 +32,16 @@ export async function getUserInfo(email: string) {
 export async function getTaskInfo() {
   try {
     const response = await axios.get(API_URL + "get-all-tasks");
+    return response.data;
+  } catch (error: any) {
+    console.error("Error in Tasks API", error);
+    throw error;
+  }
+}
+
+export async function getUsersInfo() {
+  try {
+    const response = await axios.get(API_URL + "get-all-users");
     return response.data;
   } catch (error: any) {
     console.error("Error in Tasks API", error);

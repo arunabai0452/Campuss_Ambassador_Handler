@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Image } from "@heroui/image";
-import { CopyIcon, ShareIcon } from "./icons";
+import { CopyIcon, ShareIcon } from "../icons";
 import { Button } from "@heroui/button";
 
 

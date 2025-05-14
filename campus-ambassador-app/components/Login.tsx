@@ -12,6 +12,7 @@ import { Form } from "@heroui/react";
 import { Input } from "@heroui/react";
 import { GoogleIcon, AppleIcon } from "./icons";
 import { getAccessToken, handleSignIn, handleSocialLogin } from "@/lib/authHandlers";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@heroui/react";
 import { getUserInfo } from "@/lib/accessHandler";
 import { fetchUserInfo } from "@/services/api/apiService";
 import { useInviteStore } from "@/stores/useInviteStore";
@@ -28,11 +29,16 @@ const formSchema = z.object({
 
 export default function Login({ cookieInvitedToken }: { cookieInvitedToken?: string }) {
     const [serverError, setServerError] = useState<string | null>(null);
+    const [selectedRole, setSelectedRole] = useState<string | null>("Role");
     const [loading, setLoading] = useState(false);
     const [isTransiting, setIsTransiting] = useState(true);
     const router = useRouter();
     const { inviteToken, invitedEmail } = useInviteStore();
     const { setUser } = useAmbassadorStore();
+
+    const handleSelect = (key) => {
+        setSelectedRole(key);
+    };
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -54,15 +60,20 @@ export default function Login({ cookieInvitedToken }: { cookieInvitedToken?: str
         try {
             const user = await fetchUserInfo();
             const token = await getAccessToken();
-            const ambassadorInfo = await getUserInfo(user.data.email)
-            if (ambassadorInfo.email === "") {
+            let connectDBInfo = {};
+            if(selectedRole === "Ambassador"){
+                connectDBInfo = await getUserInfo(user.data.id, "ambassador");
+            } else if (selectedRole === "Admin") {
+                connectDBInfo = await getUserInfo(user.data.id , "admin");
+            }
+            if (connectDBInfo?.id === "") {
                 await handleSignOut();
                 setIsTransiting(false);
                 throw new Error("You are not allowed to access this portal. Contact info@coltie.com");
             }
-            setUser({...ambassadorInfo})
+            setUser({ ...connectDBInfo })
             if (token) {
-                router.push('/dashboard')
+                router.push(`/dashboard?userId=${user.data.id}&role=ambassador`);
             }
         } catch (error) {
             await handleSignOut();
@@ -103,10 +114,23 @@ export default function Login({ cookieInvitedToken }: { cookieInvitedToken?: str
     return (
         <div className="flex justify-center items-center min-h-screen w-screen bg-gray-100">
             <div className="container w-full max-w-xl p-6 bg-white rounded-lg shadow-md transform -translate-y-10">
-                <h1 className="text-2xl font-bold text-center">Coltie Connect</h1>
-                {serverError && (
-                    <p className="text-red-500 text-sm text-center">{serverError}</p>
-                )}
+                <div className="flex items-center justify-center w-full p-5 relative">
+                    <h1 className="text-2xl font-bold absolute left-1/2 transform -translate-x-1/2">
+                        Campus Connect
+                    </h1>
+                    {serverError && <p className="text-red-500 text-sm">{serverError}</p>}
+                </div>
+                <div className="flex justify-end w-full">
+                    <Dropdown>
+                        <DropdownTrigger>
+                            <Button variant="bordered">{selectedRole}</Button>
+                        </DropdownTrigger>
+                        <DropdownMenu aria-label="Static Actions" onAction={handleSelect} align="end">
+                            <DropdownItem key="Ambassador">Ambassador</DropdownItem>
+                            <DropdownItem key="Admin">Admin</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                </div>
                 <Form
                     className="w-full max-w-xl flex flex-col gap-8"
                     onSubmit={form.handleSubmit(onSubmit)}

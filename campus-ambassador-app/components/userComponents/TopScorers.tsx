@@ -2,7 +2,7 @@
 import React,{useRef} from "react";
 import { Card, CardHeader, CardBody } from "@heroui/card";
 import { Image } from "@heroui/image";
-import { StarIcon, TaskIcon } from "./icons";
+import { StarIcon, TaskIcon } from "../icons";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import { Button } from "@heroui/button";

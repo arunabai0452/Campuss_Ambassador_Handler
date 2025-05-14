@@ -18,6 +18,14 @@ mongoose
 const CampusAmbassadorSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   firstName: { type: String, required: true },
+  userId: {type: String, required: true},
+  currentTasks: {
+    type: [String], required: false
+  },
+  completedTasks: {
+    type: [Object], required: false
+  },
+  pointsEarned: { type: Number, required: false },
   lastName: { type: String, required: true },
   middleName: { type: String, default: "" },
 });
@@ -41,6 +49,14 @@ const TaskSchema = new mongoose.Schema({
 
 const Task = mongoose.model("Task", TaskSchema, "Task_info");
 
+const AdminSchema = new mongoose.Schema({
+  _id: mongoose.Schema.Types.ObjectId,
+  user_Id: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+});
+
+const Admin = mongoose.model("Admin", AdminSchema, "Admin_Info");
 // Routes
 app.get("/", (req, res) => {
   res.send("Welcome to the Node.js & MongoDB Server!");
@@ -51,6 +67,16 @@ app.get("/", (req, res) => {
 app.get("/get-all-tasks", async (req, res) => {
   try {
     const tasks = await Task.find();
+    console.log(tasks);
+    res.json(tasks);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/get-all-users", async (req, res) => {
+  try {
+    const tasks = await CampusAmbassador.find();
     console.log(tasks);
     res.json(tasks);
   } catch (error) {
@@ -96,6 +122,61 @@ app.get("/users/by-email", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+app.get("/validate/userby-id", async (req,res) => {
+  const { id,role } = req.query;
+  if (!id) {
+    return res.status(400).json({ error: "Id is required" });
+  }
+  try {
+    if(role === "ambassador"){
+    const user = await CampusAmbassador.findOne({ userId: id});
+    console.log(user)
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.json(true); // Send the user data as response
+  }
+  if(role === "admin"){
+    const admin = await Admin.findOne({user_Id: id});
+    if(!admin){
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.json(true);
+  }
+  return res.status(404).json({error: "User not found"});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+})
+
+app.get("/users/by-id", async (req, res) => {
+  const { id,role } = req.query;
+  if (!id) {
+    return res.status(400).json({ error: "Id is required" });
+  }
+  try {
+    if(role === "ambassador"){
+      console.log("monk")
+    const user = await CampusAmbassador.findOne({ userId: id });
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.json(user); // Send the user data as response
+  }
+  if(role === "admin"){
+    const admin = await Admin.findOne({user_Id: id});
+    if(!admin){
+      return res.status(404).json({ error: "User not found" });
+    }
+    return res.json(admin);
+  }
+  return res.status(404).json({error: "User not found"});
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 
 // Update User
